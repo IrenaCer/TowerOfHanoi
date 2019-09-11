@@ -11,44 +11,85 @@ namespace TowerOfHanoi
     {
         static void Main(string[] args)
         {
-            Move('A', 'B', 'C', 3);
+            hb('A', 'B', 'C', 3);
+
             Console.Read();
         }
-        public static void Move(char x, char y, char z, int n, List<String> xStatus = null, List<String> yStatus = null, List<String> zStatus = null, int id = 1)
+
+        public static void hb(char xx, char yy, char zz, int nn)
+        {
+            Status status = new Status(xx, yy, zz, nn);
+
+            //Move(x, y, z, n);
+            //}
+
+            Console.WriteLine("Veiksmu seka, kai n={0}", nn);
+            Console.WriteLine("Pradine busena A:({0}) B:({1}) C:({2})", string.Join(", ", status.getStatus()['A']), string.Join(", ", status.getStatus()['B']), string.Join(", ", status.getStatus()['C']));
+
+
+            void Move(char x, char y, char z, int n)
         {
             if (n > 0)
             {
-                xStatus = xStatus ?? Enumerable.Range(1, n).Select(num => n - num + 1).ToList();
-                xStatus = xStatus ?? Enumerable.Range(1, n).Reverse().Select(num => num.ToString()).ToList();
-                yStatus = yStatus ?? new List<String>();
-                zStatus = zStatus ?? new List<String>();
+                Move(x, z, y, n-1);
 
-                Move(x, z, y, n-1, xStatus, zStatus, yStatus);
+                    status.count += 1;
 
-                Console.Write("Diską {0} nuo {1} perkelti ant {2}. ", n, x, z);
+                    Console.Write("{3}. Diska {0} nuo {1} perkelti ant {2}. ", n, x, z, status.count);
 
-                zStatus.Add(xStatus[xStatus.Count - 1]);
+                    
+                    status.getStatus()[z].Add(status.getStatus()[x][status.getStatus()[x].Count - 1]);
+                    status.getStatus()[x].RemoveAt(status.getStatus()[x].Count - 1);
+
+                    Console.WriteLine("A:({0}) B:({1}) C:({2})", string.Join(", ", status.getStatus()['A']), string.Join(", ", status.getStatus()['B']), string.Join(", ", status.getStatus()['C']));
+                /*zStatus.Add(xStatus[xStatus.Count - 1]);
                 xStatus.RemoveAt(xStatus.Count - 1);
 
                 Console.Write("A=(");
-                foreach (int i in xStatus) {
+                foreach (String i in xStatus) {
                     Console.Write(i + ",");
                 }
                 Console.Write("), B=(");
-                foreach (int i in yStatus)
+                foreach (String i in yStatus)
                 {
                     Console.Write(i + ",");
                 }
                 Console.Write("), C=(");
-                foreach (int i in zStatus)
+                foreach (String i in zStatus)
+
                 {
                     Console.Write(i + ",");
                 }
 
-                Console.WriteLine(").");
-                Move(y, x, z, n-1, yStatus, xStatus, zStatus);
+                Console.WriteLine(").");*/
+                Move(y, x, z, n-1);
             }
+        }
+
+            Move(xx, yy, zz, nn);
+                }
+
+    }
+    public class Status
+    {
+        public int count { get; set; }
+
+        Dictionary<char, List<string>> status = new Dictionary<char, List<string>>();    
+
+    public Status(char x, char y, char z, int n)
+        {
+            status.Add(x, Enumerable.Range(1, n).Reverse().Select(num => num.ToString()).ToList());
+            status.Add(y, new List<string>());
+            status.Add(z, new List<string>());
+
+            count = 0;
+        }
+
+        public Dictionary<char, List<string>> getStatus()
+        {
+            return this.status;
         }
 
     }
 }
+
